@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#FAF7FC">
+<meta name="color-scheme" content="light">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Finanças">
+<meta name="description" content="O cantinho financeiro da Dayanne">
+<title>Finanças da Dayanne</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="stylesheet" href="styles.css?v=15">
+</head>
+<body>
+
+<!-- ===== ENTRADA (login obrigatório) ===== -->
+<section class="auth" id="authScreen" aria-label="Entrar" hidden>
+  <div class="auth-card">
+    <div class="auth-brand">
+      <span class="auth-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.3s-7.5-4.5-7.5-10a4.4 4.4 0 0 1 7.5-2.8 4.4 4.4 0 0 1 7.5 2.8c0 5.5-7.5 10-7.5 10Z"/></svg>
+      </span>
+      <h1>Finanças da <em>Dayanne</em></h1>
+      <p id="authSub">Entre pra continuar de onde parou</p>
+    </div>
+
+    <div class="seg auth-seg" id="authSeg">
+      <span class="seg-thumb" aria-hidden="true"></span>
+      <button class="seg-btn is-active" type="button" data-auth="in">Entrar</button>
+      <button class="seg-btn" type="button" data-auth="up">Criar conta</button>
+    </div>
+
+    <form class="auth-form" id="authForm" novalidate>
+      <label class="fld">
+        <span class="fld-lbl">E-mail</span>
+        <input class="txt-input" id="authEmail" type="email" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="seu@email.com" aria-label="E-mail">
+      </label>
+      <label class="fld">
+        <span class="fld-lbl">Senha</span>
+        <input class="txt-input" id="authPass" type="password" autocomplete="current-password" placeholder="mínimo 6 caracteres" aria-label="Senha">
+      </label>
+      <p class="auth-err" id="authErr" hidden></p>
+      <button class="btn-main wide" type="submit" id="authGo">Entrar</button>
+    </form>
+
+    <button class="auth-link" type="button" id="authForgot">Esqueci a senha</button>
+
+    <p class="auth-foot">
+      <span class="auth-heart" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.3s-7.5-4.5-7.5-10a4.4 4.4 0 0 1 7.5-2.8 4.4 4.4 0 0 1 7.5 2.8c0 5.5-7.5 10-7.5 10Z"/></svg>
+      </span>
+      feito pelo amor da sua vida
+    </p>
+  </div>
+</section>
+
+<div class="app" id="app">
+
+  <div class="deco" aria-hidden="true">
+    <span class="blob b1"></span>
+    <span class="blob b2"></span>
+    <span class="blob b3"></span>
+  </div>
+
+  <!-- ============ HOME ============ -->
+  <main class="screen is-active" id="screen-home">
+    <header class="top-head">
+      <div class="hi">
+        <p class="hi-sub" id="helloText">Oi,</p>
+        <h1 class="hi-name" id="nameText">Dayanne <span class="dot-spark"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.2l1.9 5.9L20 12l-6.1 2.9L12 20.8l-1.9-5.9L4 12l6.1-2.9L12 3.2Z"/></svg></span></h1>
+      </div>
+      <button class="avatar" id="avatarBtn" type="button" aria-label="Abrir ajustes">
+        <span id="avatarInitial">D</span>
+        <i class="avatar-ring" aria-hidden="true"></i>
+      </button>
+    </header>
+
+    <div class="month-bar" data-monthbar>
+      <button class="mbtn" type="button" data-month="-1" aria-label="Mês anterior">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <span class="mlabel" data-monthlabel>&nbsp;</span>
+      <button class="mbtn" type="button" data-month="1" aria-label="Próximo mês">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <section class="balance" id="balanceCard">
+      <div class="balance-head">
+        <span class="balance-cap">Saldo do mês</span>
+        <span class="balance-tag" id="balanceTag"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.2l1.9 5.9L20 12l-6.1 2.9L12 20.8l-1.9-5.9L4 12l6.1-2.9L12 3.2Z"/></svg><span>sem registros</span></span>
+      </div>
+      <p class="balance-num" id="balanceNum">R$ 0,00</p>
+      <div class="balance-row">
+        <div class="bs">
+          <span class="bs-ico">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          </span>
+          <span class="bs-txt"><small>Entradas</small><b id="incomeNum">R$ 0,00</b></span>
+        </div>
+        <span class="bs-sep" aria-hidden="true"></span>
+        <div class="bs">
+          <span class="bs-ico">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          </span>
+          <span class="bs-txt"><small>Saídas</small><b id="expenseNum">R$ 0,00</b></span>
+        </div>
+      </div>
+      <span class="balance-glow" aria-hidden="true"></span>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <h2>Gastos por categoria</h2>
+        <span class="block-note" id="catNote"></span>
+      </div>
+      <div class="cat-rail" id="catRail"></div>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <h2>Últimos registros</h2>
+        <button class="ghost-link" type="button" data-goto="tx">Ver todos</button>
+      </div>
+      <ul class="tx-list" id="homeList"></ul>
+      <div class="empty" id="homeEmpty" hidden></div>
+    </section>
+
+    <p class="sign">
+      <span class="sign-heart" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.3s-7.5-4.5-7.5-10a4.4 4.4 0 0 1 7.5-2.8 4.4 4.4 0 0 1 7.5 2.8c0 5.5-7.5 10-7.5 10Z"/></svg></span>
+      feito pelo amor da sua vida
+    </p>
+  </main>
+
+  <!-- ============ REGISTROS ============ -->
+  <main class="screen" id="screen-tx">
+    <header class="page-head">
+      <h1>Meus registros</h1>
+      <p>Tudo que entrou e saiu</p>
+    </header>
+
+    <div class="month-bar" data-monthbar>
+      <button class="mbtn" type="button" data-month="-1" aria-label="Mês anterior">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <span class="mlabel" data-monthlabel>&nbsp;</span>
+      <button class="mbtn" type="button" data-month="1" aria-label="Próximo mês">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <div class="search-bar">
+      <span class="search-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.4"/><path d="M15.9 15.9 20.6 20.6"/></svg>
+      </span>
+      <input class="search-input" id="searchInput" type="search" placeholder="Buscar por descrição" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="search" aria-label="Buscar registro">
+      <button class="search-clear" type="button" id="searchClear" aria-label="Limpar busca" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+
+    <div class="chips" id="filterChips">
+      <button class="chip is-active" type="button" data-filter="all">Tudo</button>
+      <button class="chip" type="button" data-filter="income">Entradas</button>
+      <button class="chip" type="button" data-filter="expense">Saídas</button>
+    </div>
+
+    <div class="chips chips-rail" id="catChips" aria-label="Filtrar por categoria"></div>
+
+    <div class="tx-groups" id="txGroups"></div>
+    <div class="empty" id="txEmpty" hidden></div>
+  </main>
+
+  <!-- ============ RESUMO ============ -->
+  <main class="screen" id="screen-in">
+    <header class="page-head">
+      <h1>Resumo</h1>
+      <p>Onde o dinheiro foi parar</p>
+    </header>
+
+    <div class="month-bar" data-monthbar>
+      <button class="mbtn" type="button" data-month="-1" aria-label="Mês anterior">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <span class="mlabel" data-monthlabel>&nbsp;</span>
+      <button class="mbtn" type="button" data-month="1" aria-label="Próximo mês">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <section class="donut-card">
+      <div class="donut-wrap">
+        <svg class="donut" viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="donut-track" cx="60" cy="60" r="48"/>
+          <g id="donutSegs"></g>
+        </svg>
+        <div class="donut-center">
+          <small>Total gasto</small>
+          <b id="donutTotal">R$ 0,00</b>
+        </div>
+      </div>
+      <ul class="legend" id="legend"></ul>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <h2>Últimos 6 meses</h2>
+        <span class="block-note">gastos</span>
+      </div>
+      <div class="bars" id="bars"></div>
+    </section>
+
+    <div class="empty" id="inEmpty" hidden></div>
+  </main>
+
+  <!-- ============ CÂMBIO ============ -->
+  <main class="screen" id="screen-fx">
+    <header class="page-head">
+      <h1>Câmbio</h1>
+      <p>Converta entre Guarani, Real e Dólar</p>
+    </header>
+
+    <section class="conv">
+      <div class="conv-box">
+        <div class="conv-top">
+          <span class="conv-lbl">Valor</span>
+          <div class="cur-pick" id="fxFromSeg">
+            <button type="button" data-cur="PYG">Gs</button>
+            <button type="button" data-cur="BRL">R$</button>
+            <button type="button" data-cur="USD">$</button>
+          </div>
+        </div>
+        <div class="conv-line">
+          <span class="conv-sym" id="fxFromSym">R$</span>
+          <span class="conv-num" id="fxDisplay">0</span>
+        </div>
+      </div>
+
+      <button class="conv-swap" id="fxSwap" type="button" aria-label="Inverter as moedas">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4.5v13"/><path d="M4.5 8 8 4.5 11.5 8"/><path d="M16 19.5v-13"/><path d="M12.5 16 16 19.5 19.5 16"/></svg>
+      </button>
+
+      <div class="conv-box is-out">
+        <div class="conv-top">
+          <span class="conv-lbl">Vale</span>
+          <div class="cur-pick" id="fxToSeg">
+            <button type="button" data-cur="PYG">Gs</button>
+            <button type="button" data-cur="BRL">R$</button>
+            <button type="button" data-cur="USD">$</button>
+          </div>
+        </div>
+        <div class="conv-line">
+          <span class="conv-sym" id="fxToSym">Gs</span>
+          <span class="conv-num" id="fxResult" aria-live="polite">0</span>
+        </div>
+      </div>
+
+      <p class="conv-rate" id="fxRate"></p>
+    </section>
+
+    <div class="keypad" id="fxPad">
+      <button type="button" data-k="1">1</button>
+      <button type="button" data-k="2">2</button>
+      <button type="button" data-k="3">3</button>
+      <button type="button" data-k="4">4</button>
+      <button type="button" data-k="5">5</button>
+      <button type="button" data-k="6">6</button>
+      <button type="button" data-k="7">7</button>
+      <button type="button" data-k="8">8</button>
+      <button type="button" data-k="9">9</button>
+      <button type="button" data-k="c" class="key-fn">C</button>
+      <button type="button" data-k="0">0</button>
+      <button type="button" data-k="b" class="key-fn" aria-label="Apagar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h10.5A2.5 2.5 0 0 1 22 8.5v7a2.5 2.5 0 0 1-2.5 2.5H9l-6-6 6-6Z"/><path d="M12.5 9.5l5 5M17.5 9.5l-5 5"/></svg>
+      </button>
+    </div>
+  </main>
+
+  <button class="fab" id="fab" type="button" aria-label="Adicionar registro">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+    <span class="fab-ring" aria-hidden="true"></span>
+  </button>
+
+  <nav class="nav" aria-label="Navegação principal">
+    <button class="nav-btn is-active" type="button" data-goto="home" aria-current="page">
+      <span class="nav-ico">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5"/><path d="M6.5 10v9a1 1 0 0 0 1 1H10v-5.5h4V20h2.5a1 1 0 0 0 1-1v-9"/></svg>
+      </span>
+      <span class="nav-lbl">Início</span>
+    </button>
+    <button class="nav-btn" type="button" data-goto="tx">
+      <span class="nav-ico">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>
+      </span>
+      <span class="nav-lbl">Registros</span>
+    </button>
+    <button class="nav-btn" type="button" data-goto="in">
+      <span class="nav-ico">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9v9h9Z"/><path d="M12 3v9h9"/></svg>
+      </span>
+      <span class="nav-lbl">Resumo</span>
+    </button>
+    <button class="nav-btn" type="button" data-goto="fx">
+      <span class="nav-ico">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8.5h14"/><path d="M14 5l3.5 3.5L14 12"/><path d="M20.5 15.5h-14"/><path d="M10 12l-3.5 3.5L10 19"/></svg>
+      </span>
+      <span class="nav-lbl">Câmbio</span>
+    </button>
+  </nav>
+
+</div>
+
+<div class="scrim" id="scrim"></div>
+
+<!-- ===== FOLHA: REGISTRO ===== -->
+<section class="sheet" id="txSheet" role="dialog" aria-modal="true" aria-label="Registro">
+  <div class="sheet-grab" aria-hidden="true"></div>
+  <header class="sheet-head">
+    <h2 id="txSheetTitle">Novo registro</h2>
+    <button class="xbtn" type="button" data-close aria-label="Fechar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </header>
+  <form class="sheet-body" id="txForm" novalidate>
+    <div class="seg" role="group" aria-label="Tipo de registro">
+      <span class="seg-thumb" aria-hidden="true"></span>
+      <button type="button" class="seg-btn is-active" data-type="expense">Saída</button>
+      <button type="button" class="seg-btn" data-type="income">Entrada</button>
+    </div>
+
+    <div class="amount-box" id="amountBox">
+      <span class="amount-cur" id="amountCur" aria-hidden="true">R$</span>
+      <input class="amount-input" id="amountInput" type="text" inputmode="numeric" autocomplete="off" placeholder="0,00" aria-label="Valor">
+    </div>
+
+    <div class="fld">
+      <span class="fld-lbl">Categoria</span>
+      <div class="cat-pick" id="catPick"></div>
+    </div>
+
+    <div class="fld">
+      <span class="fld-lbl">Descrição <em>opcional</em></span>
+      <input class="txt-input" id="descInput" type="text" maxlength="48" autocomplete="off" placeholder="Ex.: café com as amigas" aria-label="Descrição">
+    </div>
+
+    <div class="fld">
+      <span class="fld-lbl">Data</span>
+      <input class="txt-input date-input" id="dateInput" type="date" aria-label="Data">
+    </div>
+
+    <label class="switch-row" id="fixRow">
+      <input type="checkbox" id="fixedToggle">
+      <span class="switch-txt">
+        <b>Repetir todo mês</b>
+        <small id="fixHint">Vira um gasto ou ganho fixo</small>
+      </span>
+      <span class="switch" aria-hidden="true"><i></i></span>
+    </label>
+
+    <div class="fix-dates" id="fixDates" hidden>
+      <div class="fd-row">
+        <span class="fd-lbl">Começa em</span>
+        <div class="fd-step">
+          <button class="fd-btn" type="button" data-fd="from" data-step="-1" aria-label="Começa um mês antes">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+          </button>
+          <b class="fd-val" id="fixFrom">—</b>
+          <button class="fd-btn" type="button" data-fd="from" data-step="1" aria-label="Começa um mês depois">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <label class="switch-row" id="endRow">
+        <input type="checkbox" id="endToggle">
+        <span class="switch-txt">
+          <b>Tem data pra acabar</b>
+          <small>Sem isso, ele repete todo mês pra sempre</small>
+        </span>
+        <span class="switch" aria-hidden="true"><i></i></span>
+      </label>
+
+      <div class="fd-row" id="endBox" hidden>
+        <span class="fd-lbl">Termina em</span>
+        <div class="fd-step">
+          <button class="fd-btn" type="button" data-fd="to" data-step="-1" aria-label="Termina um mês antes">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+          </button>
+          <b class="fd-val" id="fixTo">—</b>
+          <button class="fd-btn" type="button" data-fd="to" data-step="1" aria-label="Termina um mês depois">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sheet-foot">
+      <button class="btn-main" type="submit" id="saveBtn">Salvar</button>
+      <button class="btn-del" type="button" id="delBtn" hidden>Excluir</button>
+    </div>
+  </form>
+</section>
+
+<!-- ===== FOLHA: AJUSTES ===== -->
+<section class="sheet" id="setSheet" role="dialog" aria-modal="true" aria-label="Ajustes">
+  <div class="sheet-grab" aria-hidden="true"></div>
+  <header class="sheet-head">
+    <h2>Ajustes</h2>
+    <button class="xbtn" type="button" data-close aria-label="Fechar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </header>
+  <div class="sheet-body">
+    <div class="fld">
+      <span class="fld-lbl">Seu nome</span>
+      <input class="txt-input" id="nameInput" type="text" maxlength="18" autocomplete="off" aria-label="Seu nome">
+    </div>
+
+    <div class="fld">
+      <span class="fld-lbl">Moeda do app</span>
+      <div class="seg" id="curSeg">
+        <span class="seg-thumb" aria-hidden="true"></span>
+        <button type="button" class="seg-btn" data-cur="BRL">Real</button>
+        <button type="button" class="seg-btn" data-cur="PYG">Guarani</button>
+      </div>
+    </div>
+
+    <div class="rate-box">
+      <span class="rate-txt" id="rateNote">—</span>
+      <button class="rate-btn" type="button" id="rateBtn" aria-label="Atualizar cotação">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 12a8.5 8.5 0 1 1-2.5-6"/><path d="M21 4v5h-5"/></svg>
+      </button>
+    </div>
+
+    <section class="cloud" id="cloudBox">
+      <div class="cloud-head">
+        <span class="cloud-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.4 18.2h9.2a3.6 3.6 0 0 0 .3-7.2 5.1 5.1 0 0 0-9.8-1.2 3.5 3.5 0 0 0 .3 8.4Z"/></svg>
+        </span>
+        <span class="cloud-txt">
+          <b id="cloudTitle">Conta na nuvem</b>
+          <small id="cloudStatus">Entrar pra ter tudo em todos os aparelhos</small>
+        </span>
+      </div>
+
+      <div class="cloud-form" id="cloudForm">
+        <input class="txt-input" id="cloudEmail" type="email" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="seu@email.com" aria-label="E-mail da conta">
+        <input class="txt-input" id="cloudPass" type="password" autocomplete="current-password" placeholder="senha" aria-label="Senha da conta">
+        <div class="backup-row">
+          <button class="btn-soft" type="button" id="cloudSignIn">Entrar</button>
+          <button class="btn-soft" type="button" id="cloudSignUp">Criar conta</button>
+        </div>
+      </div>
+
+      <div class="cloud-actions" id="cloudActions" hidden>
+        <button class="btn-soft" type="button" id="cloudSync">Sincronizar agora</button>
+        <button class="btn-soft" type="button" id="cloudOut">Sair</button>
+      </div>
+
+      <div class="cloud-merge" id="cloudMerge" hidden>
+        <p id="cloudMergeTxt"></p>
+        <div class="backup-row">
+          <button class="btn-soft" type="button" id="cloudPull">Baixar da nuvem</button>
+          <button class="btn-soft" type="button" id="cloudPush">Enviar do aparelho</button>
+        </div>
+      </div>
+    </section>
+
+    <button class="row-btn" type="button" id="openCatBtn">
+      <span class="row-ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.4" y="3.4" width="7.2" height="7.2" rx="2"/><rect x="13.4" y="3.4" width="7.2" height="7.2" rx="2"/><rect x="3.4" y="13.4" width="7.2" height="7.2" rx="2"/><rect x="13.4" y="13.4" width="7.2" height="7.2" rx="2"/></svg>
+      </span>
+      <span class="row-txt">
+        <b>Categorias</b>
+        <small>Criar, renomear, cor e ícone</small>
+      </span>
+      <span class="row-go">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </span>
+    </button>
+
+    <button class="row-btn" type="button" id="openFixBtn">
+      <span class="row-ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3.5 20 6.5 17 9.5"/><path d="M20 6.5H8a4 4 0 0 0-4 4v.5"/><path d="M7 20.5 4 17.5 7 14.5"/><path d="M4 17.5h12a4 4 0 0 0 4-4v-.5"/></svg>
+      </span>
+      <span class="row-txt">
+        <b>Gastos e ganhos fixos</b>
+        <small>Aluguel, internet, salário…</small>
+      </span>
+      <span class="row-go">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </span>
+    </button>
+
+    <div class="backup-row">
+      <button class="btn-soft" type="button" id="exportBtn">Salvar backup</button>
+      <button class="btn-soft" type="button" id="importBtn">Restaurar</button>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+    </div>
+
+    <div class="set-note">
+      <span aria-hidden="true"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.3s-7.5-4.5-7.5-10a4.4 4.4 0 0 1 7.5-2.8 4.4 4.4 0 0 1 7.5 2.8c0 5.5-7.5 10-7.5 10Z"/></svg></span>
+      <p>Feito pelo amor da sua vida, só pra você.</p>
+    </div>
+
+    <button class="btn-del wide" type="button" id="resetBtn">Zerar todos os dados</button>
+
+    <p class="set-version">versão 1.1.5 · Bryan pra Dayanne</p>
+  </div>
+</section>
+
+<!-- ===== FOLHA: FIXOS ===== -->
+<section class="sheet" id="fixSheet" role="dialog" aria-modal="true" aria-label="Gastos e ganhos fixos">
+  <div class="sheet-grab" aria-hidden="true"></div>
+  <header class="sheet-head">
+    <h2>Fixos</h2>
+    <button class="xbtn" type="button" data-close aria-label="Fechar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </header>
+  <div class="sheet-body">
+    <p class="fix-intro">Entram sozinhos em todo mês, a partir do mês de início. Toque para editar.</p>
+    <ul class="fix-list" id="fixList"></ul>
+    <div class="empty" id="fixEmpty" hidden>
+      <span class="empty-ico"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3.5 20 6.5 17 9.5"/><path d="M20 6.5H8a4 4 0 0 0-4 4v.5"/><path d="M7 20.5 4 17.5 7 14.5"/><path d="M4 17.5h12a4 4 0 0 0 4-4v-.5"/></svg></span>
+      <p>Nenhum fixo ainda<br><b>Marque "Repetir todo mês" ao criar um registro.</b></p>
+    </div>
+    <button class="btn-main" type="button" id="addFixBtn">Novo fixo</button>
+  </div>
+</section>
+
+<!-- ===== FOLHA: CATEGORIAS ===== -->
+<section class="sheet" id="catSheet" role="dialog" aria-modal="true" aria-label="Categorias">
+  <div class="sheet-grab" aria-hidden="true"></div>
+  <header class="sheet-head">
+    <h2 id="catSheetTitle">Categorias</h2>
+    <button class="xbtn" type="button" data-close aria-label="Fechar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </header>
+
+  <div class="sheet-body">
+    <div id="catListView">
+      <div class="seg" role="group" aria-label="Tipo de categoria" id="catSeg">
+        <span class="seg-thumb" aria-hidden="true"></span>
+        <button type="button" class="seg-btn is-active" data-cattype="expense">Gastos</button>
+        <button type="button" class="seg-btn" data-cattype="income">Entradas</button>
+      </div>
+
+      <div class="cat-list" id="catList"></div>
+
+      <button class="btn-main" type="button" id="newCatBtn">Nova categoria</button>
+    </div>
+
+    <div id="catEditView" hidden>
+      <div class="fld">
+        <span class="fld-lbl">Nome</span>
+        <input class="txt-input" id="catNameInput" type="text" maxlength="18" autocomplete="off" placeholder="Ex.: Faculdade" aria-label="Nome da categoria">
+      </div>
+
+      <div class="fld">
+        <span class="fld-lbl">Cor</span>
+        <div class="swatches" id="catSwatches"></div>
+      </div>
+
+      <div class="fld">
+        <span class="fld-lbl">Ícone</span>
+        <div class="icons" id="catIcons"></div>
+      </div>
+
+      <label class="switch-row" id="catHideRow">
+        <input type="checkbox" id="catHideToggle">
+        <span class="switch-txt">
+          <b>Esconder do app</b>
+          <small>Some dos seletores, mas os registros antigos ficam</small>
+        </span>
+        <span class="switch" aria-hidden="true"><i></i></span>
+      </label>
+
+      <div class="sheet-foot">
+        <button class="btn-main" type="button" id="catSaveBtn">Salvar</button>
+        <button class="btn-del" type="button" id="catDelBtn" hidden>Excluir</button>
+      </div>
+      <button class="btn-soft wide" type="button" id="catBackBtn">Voltar pra lista</button>
+    </div>
+  </div>
+</section>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="toast-ico" id="toastIco" aria-hidden="true"></span>
+  <span id="toastMsg"></span>
+</div>
+
+<!-- ===== CONFIRMAÇÃO (no lugar do confirm do navegador) ===== -->
+<div class="ask" id="askBox" role="dialog" aria-modal="true" aria-labelledby="askTitle" aria-hidden="true">
+  <div class="ask-card">
+    <span class="ask-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8.5v5"/><path d="M12 17h.01"/><path d="M10.3 3.9 2.5 17.4A2 2 0 0 0 4.2 20.4h15.6a2 2 0 0 0 1.7-3l-7.8-13.5a2 2 0 0 0-3.4 0Z"/></svg></span>
+    <h3 id="askTitle">Tem certeza?</h3>
+    <p id="askText"></p>
+    <div class="ask-row">
+      <button class="btn-soft" type="button" id="askNo">Cancelar</button>
+      <button class="btn-del" type="button" id="askYes">Apagar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SURPRESA (5 toques em qualquer lugar) =====
+     As fotos são fotos/1.jpg e fotos/2.jpg. Se não existirem, o cartão mostra o
+     coração lilás no lugar (nada quebra e nada aparece escrito de "erro"). -->
+<div class="love" id="loveSecret" role="dialog" aria-modal="true" aria-label="Uma surpresa" aria-hidden="true">
+  <span class="love-veil" aria-hidden="true"></span>
+  <span class="love-bloom" aria-hidden="true"></span>
+  <span class="love-particles" id="loveParticles" aria-hidden="true"></span>
+
+  <div class="love-stage">
+    <span class="love-badge" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.3s-7.5-4.5-7.5-10a4.4 4.4 0 0 1 7.5-2.8 4.4 4.4 0 0 1 7.5 2.8c0 5.5-7.5 10-7.5 10Z"/></svg>
+    </span>
+
+    <p class="love-eyebrow">segredo desbloqueado</p>
+    <h2 class="love-title">O melhor investimento<br>que eu fiz foi <em>você</em></h2>
+
+    <div class="love-photos">
+      <figure class="love-photo love-photo-a">
+        <span class="love-photo-ph" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 20.3s-7.5-4.5-7.5-10a4.4 4.4 0 0 1 7.5-2.8 4.4 4.4 0 0 1 7.5 2.8c0 5.5-7.5 10-7.5 10Z" fill="currentColor"/></svg>
+        </span>
+        <img class="love-photo-img" src="fotos/1.jpg" alt="A gente">
+      </figure>
+      <figure class="love-photo love-photo-b">
+        <span class="love-photo-ph" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 20.3s-7.5-4.5-7.5-10a4.4 4.4 0 0 1 7.5-2.8 4.4 4.4 0 0 1 7.5 2.8c0 5.5-7.5 10-7.5 10Z" fill="currentColor"/></svg>
+        </span>
+        <img class="love-photo-img" src="fotos/2.jpg" alt="A gente">
+      </figure>
+    </div>
+
+    <p class="love-foot">feito pelo amor da sua vida</p>
+    <button class="love-close" type="button" id="loveClose">fechar</button>
+  </div>
+</div>
+
+<script src="sync.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

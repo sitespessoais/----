@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>preview</title>
+<style>
+  html,body{ margin:0; background:#2A2430; }
+  iframe{ width:390px; height:844px; border:0; display:block; background:#FAF7FC; }
+</style>
+</head>
+<body>
+<iframe id="f"></iframe>
+<script>
+  var q = new URLSearchParams(location.search);
+  var s = q.get('s') || 'home';
+  var sheet = q.get('sheet');
+  var scroll = q.get('scroll');
+  if (q.get('w')) {
+    var fr = document.getElementById('f');
+    fr.style.width = q.get('w') + 'px';
+    fr.style.height = (q.get('h') || 844) + 'px';
+  }
+
+  fetch('/index.html').then(function (r) { return r.text(); }).then(function (html) {
+    try { if (q.get('fresh')) localStorage.clear(); } catch (e) {}
+    /* sessão falsa, pra ver o app aberto em vez da tela de entrada */
+    if (q.get('sess')) {
+      try {
+        localStorage.setItem('dayanne.sync.sess', JSON.stringify({
+          access_token: 'fake', refresh_token: 'fake',
+          expires_at: Date.now() + 3600000, uid: 'u1', email: 'dayanne@exemplo.com', lastSent: ''
+        }));
+      } catch (e) {}
+    }
+    /* o estilo "congela" tudo: sem animação a tela já aparece no estado final,
+       que é o que interessa pra conferir o visual */
+    var patch = '<head><base href="/"><style>*,*::before,*::after{animation:none!important;transition:none!important}</style>';
+    var f = document.getElementById('f');
+    var d = f.contentDocument;
+    d.open();
+    d.write(html.replace('<head>', patch));
+    d.close();
+
+    var w = f.contentWindow;
+    var n = 0;
+    (function ready() {
+      if ((!d.getElementById('fab') || !d.querySelector('.nav-btn')) && n++ < 300) {
+        return setTimeout(ready, 10);
+      }
+      setTimeout(function () {
+        /* moeda primeiro, pra já sair tudo convertido nos prints */
+        if (q.get('cur')) {
+          d.getElementById('avatarBtn').click();
+          d.querySelector('#curSeg [data-cur="' + q.get('cur') + '"]').click();
+          d.getElementById('scrim').click();
+        }
+        if (s !== 'home') {
+          var b = d.querySelector('.nav-btn[data-goto="' + s + '"]');
+          if (b) b.click();
+        }
+        if (sheet === 'tx') d.getElementById('fab').click();
+        if (sheet === 'set') d.getElementById('avatarBtn').click();
+        if (sheet === 'cat') { d.getElementById('avatarBtn').click(); d.getElementById('openCatBtn').click(); }
+        if (sheet === 'fix') { d.getElementById('avatarBtn').click(); d.getElementById('openFixBtn').click(); }
+        if (q.get('fix')) { d.getElementById('fixedToggle').click(); }
+        if (q.get('edit')) { d.querySelector('#catList .cat-row').click(); }
+        if (q.get('ask')) { d.getElementById('avatarBtn').click(); d.getElementById('resetBtn').click(); }
+        if (q.get('auth')) {
+          var b = d.querySelector('[data-auth="' + q.get('auth') + '"]');
+          if (b) b.click();
+        }
+        if (q.get('email')) d.getElementById('authEmail').value = q.get('email');
+        if (q.get('pass')) d.getElementById('authPass').value = q.get('pass');
+        if (q.get('submit')) {
+          var f = d.getElementById('authForm');
+          f.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+        }
+        if (q.get('save')) {
+          setTimeout(function () {
+            d.getElementById('fab').click();
+            var inp = d.getElementById('amountInput');
+            inp.value = q.get('save');
+            inp.dispatchEvent(new Event('input', { bubbles: true }));
+            d.getElementById('descInput').value = 'teste pela interface';
+            d.getElementById('saveBtn').click();
+          }, 2500);
+        }
+        if (q.get('back')) {
+          var b = d.querySelector('[data-month="-1"]');
+          for (var k = 0; k < parseInt(q.get('back'), 10); k++) b.click();
+        }
+        setTimeout(function () {
+          if (scroll === 'bottom') w.scrollTo(0, 999999);
+          else if (scroll) w.scrollTo(0, parseInt(scroll, 10));
+          if (q.get('sbody')) {
+            var body = d.querySelector('.sheet.is-on .sheet-body');
+            if (body) body.scrollTop = 99999;
+          }
+          if (q.get('debug')) {
+            var r = function (el) {
+              if (!el) return 'n/a';
+              var b = el.getBoundingClientRect();
+              return Math.round(b.top) + '..' + Math.round(b.bottom) + ' h' + Math.round(b.height);
+            };
+            var lines = [
+              'viewport ' + w.innerWidth + 'x' + w.innerHeight,
+              'clientW ' + d.documentElement.clientWidth + ' / body ' + d.body.clientWidth +
+                ' / gap ' + (w.innerWidth - d.documentElement.clientWidth),
+              'scrollW doc ' + d.documentElement.scrollWidth + ' / body ' + d.body.scrollWidth,
+              'doc h ' + Math.round(d.documentElement.scrollHeight),
+              '#app ' + (function () {
+                var b = d.getElementById('app').getBoundingClientRect();
+                return Math.round(b.left) + '..' + Math.round(b.right);
+              })(),
+              '#screen ' + r(d.querySelector('.screen.is-active')),
+              '.nav ' + r(d.querySelector('.nav')),
+              '.keypad ' + r(d.querySelector('.keypad')),
+              '.conv ' + r(d.querySelector('.conv')),
+              '.fab ' + r(d.getElementById('fab')),
+              'scrollY ' + Math.round(w.scrollY),
+              'navPadBottom ' + getComputedStyle(d.querySelector('.screen.is-active')).paddingBottom
+            ];
+            var box = document.createElement('pre');
+            box.style.cssText = 'position:fixed;left:0;top:0;z-index:99;margin:0;padding:6px;' +
+              'background:#000;color:#0f0;font:11px monospace;line-height:1.35';
+            box.textContent = lines.join('\n');
+            document.body.appendChild(box);
+          }
+        }, 60);
+      }, 60);
+    })();
+  });
+</script>
+</body>
+</html>

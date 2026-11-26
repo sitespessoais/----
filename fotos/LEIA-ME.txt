@@ -1,0 +1,19 @@
+FOTOS DO EASTER EGG
+===================
+
+As duas fotos já estão aqui:
+
+  fotos/1.jpg  -> a do casal deitado (foto da esquerda no cartão)
+  fotos/2.jpg  -> a do beijo no rosto (foto da direita, a que fica na frente)
+
+Elas aparecem no cartão da surpresa (5 toques rápidos no cartão roxo do saldo).
+
+Pra trocar por outras:
+- mesmo nome (1.jpg e 2.jpg) e pronto: nada no código precisa mudar
+- de preferência em pé (retrato). O cartão mostra num quadro de 112x144 e corta
+  o excesso com object-fit: cover, então o centro da foto é o que aparece
+- algo em torno de 800px de largura já fica nítido no celular e leve pra carregar
+  (as duas atuais somam ~110 KB)
+
+Se as fotos sumirem, o cartão mostra um coração lilás no lugar — nada quebra e
+nada aparece escrito de erro.
